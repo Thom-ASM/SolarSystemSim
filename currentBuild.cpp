@@ -2,108 +2,156 @@
 #include<vector>
 #include<iostream>
 #include<math.h>
-const int PI =3.14;
-const float G=6.67*pow(10,-11);
-int timeWarp=1;
+#include<sstream>
+//Constants
+const int PI = 3.14;
+const float G = 6.67*pow(10, -11);
+const int height = 1080;
+const int width = 1920;
 
-class Circle{
-    private :
-        int getOrbitInfo();
-        int radius,xPos,yPos,xOrigin,yOrigin;
-        int semiMajorAxis;
-        int orbitRadius;
-        float currentAngle,mass,angularVelocity,orbitalPeriod;
-        sf::Color planetColor;
-    public:
-        Circle(int raduis,int x,int y,int orbitRadius,sf::Color planetColor,float angularVel);
-        void update();        
-        sf::CircleShape planet;
-};
-Circle::Circle(int radius,int x,int y,int OrbitRadius,sf::Color color,float mass){
-      this->radius=radius;
-      this->orbitRadius=OrbitRadius;
-      this->mass=mass;
-      this->xOrigin=500;
-      this->yOrigin=360;
-      this->xPos=x+this->xOrigin;
-      this->yPos=y+this->yOrigin;
-      this->currentAngle=0;       
-      this->planetColor=color;
-      this->planet.setOrigin(this->radius,this->radius);
-      this->planet.setPointCount(255);
-      this->planet.setRadius(this->radius);  
-      this->planet.setPosition(this->xPos,this->yPos);
-      this->planet.setFillColor(this->planetColor);
-}
 
-void Circle::update(){   
-    getOrbitInfo();   
-this->currentAngle+=this->angularVelocity;
-    if (this->currentAngle>360){
-       this->currentAngle=0;}
-    this->xPos=(this->xOrigin+(cos(-currentAngle*3.14/180)*this->orbitRadius));
-    this->yPos=(this->yOrigin+(sin(-currentAngle*3.14/180)*this->orbitRadius));
-    this->planet.setPosition(this->xPos,this->yPos);
-    }
-std::vector<Circle> planetArray;
+
+//Planet class
+class Planet {
+private:
     
-int Circle::getOrbitInfo(){
-//Kepler's third law
-this->orbitalPeriod=sqrt(4*pow(PI,2)/(G*planetArray[0].mass)*pow(this->orbitRadius,3))/timeWarp;
-this->angularVelocity=(2*PI)/this->orbitalPeriod;
-} 
-int main(){
-int height=720;
-int width=1000;
-    sf::RenderWindow window(sf::VideoMode(width, height), "Solar System sim");  
-Circle Sun(50,width/2,height/2,0,sf::Color::Yellow,5);
-planetArray.push_back(Sun);
-Circle Mercury(7,400,360,150,sf::Color(100,100,100),5);
-planetArray.push_back(Mercury);
-Circle Venus(7,400,360,200,sf::Color(139,69,19),4);
-planetArray.push_back(Venus);
-Circle Earth(7,400,360,250,sf::Color(77,77,255),3);
-planetArray.push_back(Earth);
-Circle Mars(7,400,360,300,sf::Color(255,55,55),2);
-planetArray.push_back(Mars);
-Circle Jupiter(7,400,360,350,sf::Color(201,144,57),1);
-planetArray.push_back(Jupiter);
- while (window.isOpen())
-    {
-        sf::Event event;
-         while (window.pollEvent(event))
-        {
-            switch (event.type) {
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-                case sf::Event::MouseButtonPressed:{
-                    int posy=event.mouseButton.y;
-                    int posx=event.mouseButton.x;
-                    Circle newShape(50,posx,posy,125,sf::Color::Green,5);
-                    planetArray.push_back( newShape);
-                    break;
-}
-                case sf::Event::KeyPressed:
-                     if(event.key.code== sf::Keyboard::Comma){
-                            if (timeWarp>10){
-                                timeWarp=timeWarp/10;}
-                     }else if(event.key.code==sf::Keyboard::Period){
-                            if(timeWarp<pow(10,9)){
-                                timeWarp=timeWarp*10;}
-                    }break;
-              }
-        }
-                     
-                                   
-        
+	int planetRadius, xPos, yPos, xOrigin, yOrigin, orbitRadius;
+	float currentAngle, planetMass, angularVelocity, orbitalPeriod;
+	sf::Color planetColor;
+public:
+	Planet(int raduis, int x, int y,  sf::Color planetColor, float angularVel);
+	void update();
+	void getOrbitInfo();
+	sf::CircleShape planet;
+};
 
-        window.clear();
- 	for (int itr=0;itr<planetArray.size();itr++){
-            planetArray[itr].update();
-            window.draw(planetArray[itr].planet);       
+//Global variables
+int timeWarp = 1;
+std::vector<Planet> planetArray;
+
+//Planet constructor
+Planet::Planet(int planetRadius, int x, int y,  sf::Color color, float mass) {
+    this->planetRadius = planetRadius;
+	this->planetMass = mass;
+	this->xOrigin = width/2;
+	this->yOrigin = height/2;
+	this->xPos = x;
+	this->yPos = y;
+	this->orbitRadius = sqrt(pow(this->xPos,2)+pow(this->yPos,2));
+	this->currentAngle = 0;
+	this->planetColor = color;
+	this->planet.setOrigin(this->planetRadius, this->planetRadius);
+	//The radius of the orbit of the sun is 0 and we can't / by 0
+	if (this->orbitRadius != 0) {
+		this->currentAngle = acos(this->yPos / this->orbitRadius) * 180 / PI;
+	}
+	this->planet.setPointCount(255);
+	this->planet.setRadius(this->planetRadius);
+	this->planet.setPosition((this->xPos+this->xOrigin), (this->yPos+this->yOrigin));
+	this->planet.setFillColor(this->planetColor);
 }
-        window.display();
-    }
-    return 0;
+//Update the planets angle and position
+void Planet::update() {
+	getOrbitInfo();
+	this->currentAngle += this->angularVelocity;
+	if (this->currentAngle>360) {
+		this->currentAngle = 0;
+	}
+	this->xPos = (this->xOrigin + (cos(-currentAngle*3.14 / 180)*this->orbitRadius));
+	this->yPos = (this->yOrigin + (sin(-currentAngle*3.14 / 180)*this->orbitRadius));
+	this->planet.setPosition(this->xPos, this->yPos);
+}
+
+//Find the angular velocity and time period of the orbit
+void Planet::getOrbitInfo() {
+	//Kepler's third law
+	this->orbitalPeriod = sqrt(4 * pow(PI, 2) / (G*planetArray[0].planetMass)*pow(this->orbitRadius, 3)) / timeWarp;
+	this->angularVelocity = (2 * PI) / this->orbitalPeriod;
+	
+}
+int main() {
+	// All of the planets + Pluto
+	sf::RenderWindow window(sf::VideoMode(width, height), "Solar System sim");
+	Planet Sun(50, 0, 0,  sf::Color::Yellow, 5);
+	planetArray.push_back(Sun);
+	Planet Mercury(2, 100, 100, sf::Color(100, 100, 100), 2);
+	planetArray.push_back(Mercury);
+	Planet Venus(4, 150, 150,  sf::Color(139, 69, 19), 4);
+	planetArray.push_back(Venus);
+	Planet Earth(5, 200, 200, sf::Color(77, 77, 255), 5);
+	planetArray.push_back(Earth);
+	Planet Mars(3, 250, 250, sf::Color(255, 55, 55), 3);
+	planetArray.push_back(Mars);
+	Planet Jupiter(9, 300, 300, sf::Color(201, 144, 57), 9);
+	planetArray.push_back(Jupiter);
+	Planet Saturn(8, 300, 350, sf::Color(206,184,184), 8);
+	planetArray.push_back(Saturn);
+	Planet Uranus(7, 300, 400, sf::Color(40,114,144), 6);
+	planetArray.push_back(Uranus);
+	Planet Neptune(6, 300, 450, sf::Color(39,70,135), 7);
+	planetArray.push_back(Neptune);
+	//I know you are not a planet but I still love you
+	Planet Pluto(1, 300, 500, sf::Color(180, 133, 112), 1);
+	planetArray.push_back(Pluto);
+
+	sf::Font font;
+	font.loadFromFile("AvenirNextLTPro-Cn.otf");
+	while (window.isOpen())
+	{
+		std::ostringstream oss;
+		oss << timeWarp;
+		std::string timeWarpStr =("Time Warp: "+oss.str());
+		
+		sf::Text warpValueText(timeWarpStr, font);
+		warpValueText.setPosition(0, 0);
+
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			switch (event.type) {
+			case sf::Event::Closed:
+				window.close();
+				break;
+			// If mouse pressed
+			case sf::Event::MouseButtonPressed: {
+				//Get mouse position
+			    int posy = event.mouseButton.y;
+				int posx = event.mouseButton.x;
+				//Create a new earth like planet
+				Planet newShape(5, posx-width/2, posy-height/2,  sf::Color::Green, 5);
+				planetArray.push_back(newShape);
+				break;
+			}
+			case sf::Event::KeyPressed: 
+				//Decrease timewarp value
+				if (event.key.code == sf::Keyboard::Comma) {
+					if (timeWarp > 1) {
+						timeWarp = timeWarp / 10;
+					}
+				}
+				//Increase time warp value
+				else if (event.key.code == sf::Keyboard::Period) {
+					if (timeWarp < pow(10, 9)) {
+						timeWarp = timeWarp * 10;
+					}
+				}
+				//Exit program
+				else if (event.key.code == sf::Keyboard::Escape) {
+					window.close();
+				}
+				break;
+			}
+
+		}
+
+		window.clear();
+		//Loop through all of the planets and update and draw them
+		for (int itr = 0; itr<planetArray.size(); itr++) {
+			planetArray[itr].update();
+			window.draw(planetArray[itr].planet);
+		}
+		window.draw(warpValueText);
+		window.display();
+	}
+	return 0;
 }
