@@ -57,8 +57,8 @@ void Planet::update() {
 	if (this->currentAngle>360) {
 		this->currentAngle = 0;
 	}
-	this->xPos = (this->xOrigin + (cos(-currentAngle*3.14 / 180)*this->orbitRadius));
-	this->yPos = (this->yOrigin + (sin(-currentAngle*3.14 / 180)*this->orbitRadius));
+	this->xPos = (this->xOrigin + (cos(-currentAngle*PI / 180)*this->orbitRadius));
+	this->yPos = (this->yOrigin + (sin(-currentAngle*PI / 180)*this->orbitRadius));
 	this->planet.setPosition(this->xPos, this->yPos);
 }
 
