@@ -9,8 +9,6 @@ const float G = 6.67*pow(10, -11);
 const int height = 1080;
 const int width = 1920;
 
-
-
 //Planet class
 class Planet {
 private:
@@ -95,7 +93,7 @@ int main() {
 	planetArray.push_back(Pluto);
 
 	sf::Font font;
-	font.loadFromFile("AvenirNextLTPro-Cn.otf");
+	font.loadFromFile("AvenirLTStd-Book.otf");
 	while (window.isOpen())
 	{
 		std::ostringstream oss;
@@ -141,9 +139,7 @@ int main() {
 				}
 				break;
 			}
-
 		}
-
 		window.clear();
 		//Loop through all of the planets and update and draw them
 		for (int itr = 0; itr<planetArray.size(); itr++) {
