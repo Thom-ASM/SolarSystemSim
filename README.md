@@ -7,21 +7,10 @@ There are a few things that you need to do to build this program.
 ## -All
 1.You are going to need to install the [SFML](http://www.sfml-dev.org/index.php) library.
 
-2.You are going to have to edit the following line of code:
-``` C++
-font.loadFromFile("AvenirNextLTPro-Cn.otf");
-```
-
-to
-
-``` C++
-font.loadFromFile("FontName");
-```
-
-3.You are going to have to place the font of your choice inside the same file as the executable
+2.You are going to have to place the font of your choice inside the same file as the executable
 
 ## -Linux
-4.When linking the C++ object file to the exe you are going to need to use the following additional args
+1.When linking the C++ object file to the exe you are going to need to use the following additional args
 
 ``` Bash
 g++ ~/Path/to/object/file.o -o ~/path/to/exe -lsfml-graphics -lsfml-window -lsfml-system
