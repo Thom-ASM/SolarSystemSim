@@ -4,7 +4,7 @@ This program uses Kepler's laws of planetary motion to give a simplistic simulat
 
 # How to build
 There are a few things that you need to do to build this program.
-## -All
+## -All operating systems
 1.You are going to need to install the [SFML](http://www.sfml-dev.org/index.php) library.
 
 2.You are going to have to place the font of your choice inside the same file as the executable
