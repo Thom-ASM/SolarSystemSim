@@ -1,6 +1,13 @@
 # SolarSystemSim
 
 This program uses Kepler's laws of planetary motion to give a simplistic simulation of the solar system.
+## Things I want to add:
+1. Eliptical orbits
+
+2. N-Body physics 
+
+3. Planet info
+
 
 # How to build
 There are a few things that you need to do to build this program.
