@@ -13,7 +13,7 @@ Planet::Planet(std::string name,int raduis, sf::Vector2i position, sf::Color pla
 	planet.setOrigin(planetRadius, planetRadius);
 	//The radius of the orbit of the sun is 0 and we can't / by 0
 	if (orbitRadius != 0) {
-		currentAngle = acos(planetPos.y / orbitRadius) * 180 / PI;
+		//currentAngle = acos(planetPos.x / orbitRadius) * 180 / PI;
 }	
 	planet.setPointCount(255);
 	planet.setRadius(planetRadius);
@@ -61,4 +61,20 @@ std::string Planet::returnName() {
 //DEBUG ALTHOUGH MIGHT NEED IT FOR COLLISION
 sf::Vector2i Planet::returnPos() {
 	return (planetPos);
+}
+bool::Planet::checkMouse(sf::RenderWindow &window,sf::Vector2f mousePos) {
+		if (planet.getGlobalBounds().contains(mousePos)) {
+			std::cout <<returnPlanetInfo()<<'\n';
+			return true;
+		}else {
+			return false;
+		}
+		
+
+}
+std::string Planet::returnPlanetInfo() {
+	std::ostringstream stringStream;
+	stringStream << "Planet Name: " << planetName << "\n \t Position: " << planetPos.x <<" , "<< planetPos.y << "\n \t Mass: " << planetMass << "\n \t Radius: " << planetRadius << "\n \t Angular Velocity: " << angularVelocity;
+	std::string infoString = stringStream.str();
+	return infoString;
 }

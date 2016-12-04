@@ -21,6 +21,7 @@ private:
 	//Functions
 	//float getNetForce();
 	std::string planetName;
+	std::string returnPlanetInfo();
 	
 public:
 	//Variables
@@ -30,6 +31,7 @@ public:
 	void update();
 	float getNetForce();
 	float returnMass();
+	bool checkMouse(sf::RenderWindow &window, sf::Vector2f mousePos);
 	std::string returnName();
 	sf::CircleShape getRenderObjet();
 	sf::Vector2i returnPos();
