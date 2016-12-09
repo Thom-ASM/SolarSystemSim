@@ -22,12 +22,15 @@ private:
 	//float getNetForce();
 	std::string planetName;
 	std::string returnPlanetInfo();
+	bool isCollision(int itr);
+	void checkCollision();
+	
 	
 public:
 	//Variables
 
 	//Functions
-	Planet(std::string name,int raduis, sf::Vector2i Position, sf::Color planetColor, float mass, float initalVelocity);
+	
 	void update();
 	float getNetForce();
 	float returnMass();
@@ -35,6 +38,12 @@ public:
 	std::string returnName();
 	sf::CircleShape getRenderObjet();
 	sf::Vector2i returnPos();
+	float returnAngle();
+	Planet(std::string name, int raduis, sf::Vector2i Position, sf::Color planetColor, float mass, float initalVelocity, float currentang);
+
+
+	
+	
 };
 
 //External Variables

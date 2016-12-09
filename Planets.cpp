@@ -2,19 +2,10 @@
 
 
 
-Planet::Planet(std::string name,int raduis, sf::Vector2i position, sf::Color planetColor, float mass,float initalVelocity) {
-	planetName = name;
-	planetPos = position;
-	planetRadius = raduis;
+Planet::Planet(std::string name,int radius, sf::Vector2i position, sf::Color color, float mass,float initalVelocity,float currentang):planetName(name),planetRadius(radius), planetPos(position),planetColor(color),planetMass(mass),currentAngle(currentang){
 	orbitRadius= sqrt(pow((int)planetPos.x, 2) + pow((int)planetPos.y, 2));//Will need to change this when I use eliptical orbits
-	currentAngle = 0;
-	planetColor = planetColor;
-	planetMass = mass;
 	planet.setOrigin(planetRadius, planetRadius);
 	//The radius of the orbit of the sun is 0 and we can't / by 0
-	if (orbitRadius != 0) {
-		//currentAngle = acos(planetPos.x / orbitRadius) * 180 / PI;
-}	
 	planet.setPointCount(255);
 	planet.setRadius(planetRadius);
 	planet.setPosition((sf::Vector2f)planetPos);
@@ -36,6 +27,7 @@ void Planet::update() {
 	 planetPos.x = (cos(currentAngle*PI / 180)* orbitRadius);
 	 planetPos.y = (sin(currentAngle*PI / 180)* orbitRadius);
 	 planet.setPosition((sf::Vector2f) planetPos);
+	 checkCollision();
 }
 
 sf::CircleShape Planet::getRenderObjet() {
@@ -58,7 +50,6 @@ float Planet::getNetForce() {
 std::string Planet::returnName() {
 	return planetName;
 }
-//DEBUG ALTHOUGH MIGHT NEED IT FOR COLLISION
 sf::Vector2i Planet::returnPos() {
 	return (planetPos);
 }
@@ -69,12 +60,32 @@ bool::Planet::checkMouse(sf::RenderWindow &window,sf::Vector2f mousePos) {
 		}else {
 			return false;
 		}
-		
-
 }
 std::string Planet::returnPlanetInfo() {
 	std::ostringstream stringStream;
 	stringStream << "Planet Name: " << planetName << "\n \t Position: " << planetPos.x <<" , "<< planetPos.y << "\n \t Mass: " << planetMass << "\n \t Radius: " << planetRadius << "\n \t Angular Velocity: " << angularVelocity;
 	std::string infoString = stringStream.str();
 	return infoString;
+}
+//Need to remove both of the objects in the collision;
+void Planet::checkCollision() {
+	for (int itr = 0; itr < planetArray.size(); itr++) {
+		if (isCollision(itr)) {
+			std::ostringstream stringStream;
+			stringStream << "Collision between " << planetName << " and: " << planetArray[itr].returnName();
+			std::string ColString = stringStream.str();
+			std::cout << ColString << '\n';
+		}
+	}
+}
+
+bool Planet::isCollision(int itr) {
+	return (planet.getGlobalBounds().contains((sf::Vector2f)planetArray[itr].returnPos()) && &planetArray[itr] != this);
+}
+
+//DEBUG
+
+
+float Planet::returnAngle() {
+	return currentAngle;
 }
