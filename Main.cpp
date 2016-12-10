@@ -6,9 +6,6 @@
 	*Fix custom Planets 
 		-Something to do with the angle but I do not know what it is.
 		-Partially works on one quadrant of a circle
-	*Text interface to show planet information
-		-Replace the command line with sf::text
-		-Have to work out an elegant(ish) solution
 	*N-Body physics
 	*/
 #include<SFML/Graphics.hpp>
@@ -20,16 +17,18 @@
 #include"CustomMouse.h"
 #include"interfaceText.h"
 
+
+
 //Global variables
 const int height = 1080;
 const int width = 1920;
 int customPlanetCounter = 0;
-
-
 int timewarp=1;
 std::vector<Planet> planetArray;
+std::vector<interfaceText> textArray;
 
 int main() {
+	std::string inputString;
 	// All of the planets + Pluto
 	sf::RenderWindow window(sf::VideoMode(width, height), "Solar System sim");
 	MouseC mouse(window);
@@ -42,29 +41,28 @@ int main() {
 	Planet Saturn("Saturn", 8, sf::Vector2i(300, 350), sf::Color(206, 184, 184),8, 8, 0);
 	Planet Uranus("Uranus", 7, sf::Vector2i(300, 400), sf::Color(40, 114, 144), 6,6, 0);
 	Planet Neptune("Neptune", 6, sf::Vector2i(300, 450), sf::Color(39, 70, 135), 7,7, 0);
-	//I know you are not a planet but I still love you
 	Planet Pluto("Pluto",1, sf::Vector2i(300, 500), sf::Color(180, 133, 112),1, 1, 0);
+	//Pointer to the activePlanet object
+	Planet* activePlanet;
+	//All of the default text
+	interfaceText planetNameTxt(sf::Vector2f(width*.3, -height*.5), sf::Color(255, 255, 255, 255), "");
+	interfaceText planetPosTxt(sf::Vector2f(width*.3, -height*.475), sf::Color(255, 255, 255, 255), "");
+	interfaceText planetMassTxt(sf::Vector2f(width*.3, -height*.45), sf::Color(255, 255, 255, 255), "");
+	interfaceText planetAngVelTxt(sf::Vector2f(width*.3, -height*.425), sf::Color(255, 255, 255, 255), "");
+	interfaceText planetRadiusTxt(sf::Vector2f(width*.3, -height*.4), sf::Color(255, 255, 255, 255), "");
+	interfaceText timeWarpText(sf::Vector2f(-width / 2, -height / 2), sf::Color(255, 255, 255, 255), "TimeWarp: 1");
 
 	sf::View view;
 	//Makes the camera center be at the coordinates (0,0) 
 	view.reset(sf::FloatRect(-width/2, -height/2, width, height));
 	window.setView(view);
 
-	sf::Font font;
-	font.loadFromFile("AvenirNextLTPro-Cn.otf");
+	
+
+	
+
 	while (window.isOpen())
 	{
-		std::ostringstream oss;
-		oss << timewarp;
-		std::string timeWarpStr = ("Time Warp: " + oss.str());
-
-		sf::Text warpValueText(timeWarpStr, font);
-		warpValueText.setPosition(-width/2, -height/2);
-		interfaceText newText(sf::Vector2f(100, 100), sf::Color(255, 255, 255, 255));
-		interfaceText newText2(sf::Vector2f(500, 500), sf::Color(255, 255, 255, 255));
-		interfaceText newText3(sf::Vector2f(320, 200), sf::Color(255, 255, 255, 255));
-		interfaceText newText4(sf::Vector2f(921, 532), sf::Color(255, 255, 255, 255));
-
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -86,6 +84,17 @@ int main() {
 				else {
 					for (int itr2 = 0; itr2 < planetArray.size(); itr2++) {
 						if (planetArray[itr2].checkMouse(window, mousePos)) {
+							activePlanet = &planetArray[itr2];
+							
+							//This is a temp solution 
+							//Update all of the planet InfoText
+							sf::Color planetColor = activePlanet->returnColor();
+							textArray[0].updateText("Planet name: "+activePlanet->returnName(), textArray[0].returnTextPosition(), planetColor);
+							textArray[1].updateText("Planet pos: "+(std::to_string(activePlanet->returnPos().x) + " , " + std::to_string(activePlanet->returnPos().y)), textArray[1].returnTextPosition(), planetColor);
+							textArray[2].updateText("Planet mass: " + std::to_string(activePlanet->returnMass()), textArray[2].returnTextPosition(), planetColor);
+							textArray[3].updateText("Planet angle: "+std::to_string(activePlanet->returnAngle()), textArray[3].returnTextPosition(), planetColor);
+							textArray[4].updateText("Planet radius: "+std::to_string(activePlanet->returnRadius()), textArray[4].returnTextPosition(), planetColor);
+							std::cout << activePlanet->returnName() << '\n';
 							break;
 						}
 					}
@@ -109,6 +118,11 @@ int main() {
 				else if (event.key.code == sf::Keyboard::Escape) {
 					window.close();
 				}
+				else if (event.key.code == sf::Keyboard::C) {
+					//std::cin >>inputString;
+					//textArray[itr].updateText(inputString, textArray[itr].returnTextPosition(), sf::Color(255, 255, 255, 255));
+				}
+				textArray[5].updateText("Timewarp: " + std::to_string(timewarp), textArray[5].returnTextPosition(), sf::Color::White);
 				break;
 			}
 		}
@@ -116,18 +130,13 @@ int main() {
 		//Loop through all of the planets and update and draw them
 		for (int itr = 0; itr<planetArray.size(); itr++) {
 			planetArray[itr].update();
-			//planetArray[itr].collision();
 			window.draw(planetArray[itr].getRenderObjet());
 		}
-		window.draw(warpValueText);
-		newText.updateText(planetArray[2].returnAngle());
-		window.draw(newText.returnRenderObject());
-		newText2.updateText(planetArray[2].returnAngle());
-		window.draw(newText2.returnRenderObject());
-		newText3.updateText(planetArray[2].returnAngle());
-		window.draw(newText3.returnRenderObject());
-		newText4.updateText(planetArray[2].returnAngle());
-		window.draw(newText4.returnRenderObject());
+		
+		for (int itr = 0; itr<textArray.size(); itr++) {
+			window.draw(textArray[itr].returnRenderObject());
+			
+		}
 		window.display();
 	}
 	return 0;

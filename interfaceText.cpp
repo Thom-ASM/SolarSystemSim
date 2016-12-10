@@ -1,38 +1,30 @@
 #include "interfaceText.h"
 
-interfaceText::interfaceText(sf::Vector2f textPosition, sf::Color textColor):position(textPosition),color(textColor)
-{
-
+interfaceText::interfaceText(sf::Vector2f textPosition, sf::Color textColor,std::string String):position(textPosition),color(textColor),string(String){
 	font.loadFromFile("AvenirNextLTPro-Cn.otf");
-	text.setString(createString());
+	text.setString(string);
 	text.setPosition(position);
 	text.setFont(font);
 	text.setColor(color);
+	textArray.push_back(*this);
 }
 
-std::string interfaceText::createString() {
-	std::string TESTSTRING="DEBUG";
-	return TESTSTRING;
-}
-
-void interfaceText::updateText(float currentAngle){//std::string string, sf::Vector2f textPosition, sf::Color textColor) {
-	text.setString(createString());
-	position.x = (cos(currentAngle*3.14 / 180)* position.x/2);
-	position.y = (sin(currentAngle*3.14 / 180)* position.y/ 2);
+void interfaceText::updateText(std::string String, sf::Vector2f textPosition, sf::Color textColor) {
+	srand(time(NULL));
+	string = String;
+	position = textPosition;
+	text.setString(string);
 	text.setPosition(position);
-	text.setColor(generateRandomColors());
-	//std::cout << text.getPosition().x<<" " << text.getPosition().y <<'\n';
-	currentAngle+=1;
+	text.setColor(textColor);
 }
 
 sf::Text interfaceText::returnRenderObject() {
 	return text;
 }
-sf::Color interfaceText::generateRandomColors() {
-	srand(time(NULL));
-	sf::Color newColor (rand()%255, rand() % 255, rand() % 255,255);
-	return newColor;
+sf::Vector2f interfaceText::returnTextPosition() {
+	return position;
 }
-interfaceText::~interfaceText()
-{
+std::string  interfaceText::returnString() {
+	return string;
 }
+
