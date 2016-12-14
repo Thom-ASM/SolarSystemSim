@@ -18,6 +18,6 @@ public:
 	sf::Vector2f returnTextPosition();
 	std::string returnString();
 	sf::Text returnRenderObject();
+	~interfaceText();
 };
 extern std::vector<interfaceText>  textArray;
-extern interfaceText planetInfoTextArray[5];

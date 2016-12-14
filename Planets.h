@@ -31,7 +31,7 @@ public:
 	bool checkMouse(sf::RenderWindow &window, sf::Vector2f mousePos);
 	Planet(std::string name, int raduis, sf::Vector2i Position, sf::Color planetColor, float mass, float initalVelocity, float currentang);
 
-	//Return functions- Is there a betterway of doing this? I would rather keep the class attributes private 
+	//Return functions- Is there a better way of doing this? I would rather keep the class attributes private 
 	
 	float returnAngVel();
 	float returnAngle();

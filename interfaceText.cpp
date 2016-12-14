@@ -10,12 +10,12 @@ interfaceText::interfaceText(sf::Vector2f textPosition, sf::Color textColor,std:
 }
 
 void interfaceText::updateText(std::string String, sf::Vector2f textPosition, sf::Color textColor) {
-	srand(time(NULL));
 	string = String;
 	position = textPosition;
+	color = textColor;
 	text.setString(string);
 	text.setPosition(position);
-	text.setColor(textColor);
+	text.setColor(color);
 }
 
 sf::Text interfaceText::returnRenderObject() {
@@ -27,4 +27,6 @@ sf::Vector2f interfaceText::returnTextPosition() {
 std::string  interfaceText::returnString() {
 	return string;
 }
+interfaceText::~interfaceText() {
 
+}

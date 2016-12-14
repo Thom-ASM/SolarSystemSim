@@ -1,18 +1,13 @@
 /*What I plan to do overall 
-	*Collisions with planets
-		-Check if get local bounds constains another planet
-		-Remove both of the planets involved
-		-Perhaps a small particle system
 	*Fix custom Planets 
 		-Something to do with the angle but I do not know what it is.
-		-Partially works on one quadrant of a circle
+		-Partially works on one half of a circle
 	*N-Body physics
 	*/
 #include<SFML/Graphics.hpp>
 #include<vector>
 #include<iostream>
 #include<math.h>
-#include<sstream>
 #include "Planets.h"
 #include"CustomMouse.h"
 #include"interfaceText.h"
@@ -22,7 +17,7 @@
 //Global variables
 const int height = 1080;
 const int width = 1920;
-int customPlanetCounter = 0;
+int planetCounter = 0;
 int timewarp=1;
 std::vector<Planet> planetArray;
 std::vector<interfaceText> textArray;
@@ -53,13 +48,9 @@ int main() {
 	interfaceText timeWarpText(sf::Vector2f(-width / 2, -height / 2), sf::Color(255, 255, 255, 255), "TimeWarp: 1");
 
 	sf::View view;
-	//Makes the camera center be at the coordinates (0,0) 
+	//Makes the camera center be at (0,0) 
 	view.reset(sf::FloatRect(-width/2, -height/2, width, height));
 	window.setView(view);
-
-	
-
-	
 
 	while (window.isOpen())
 	{
@@ -73,13 +64,10 @@ int main() {
 			case sf::Event::MouseButtonPressed: {
 				sf::Vector2f mousePos = mouse.getPositionW();
 				if (event.mouseButton.button == sf::Mouse::Right) {
-					std::ostringstream planetNameStream;
-					planetNameStream << "Custom Planet " << customPlanetCounter;
-					std::string planetName = planetNameStream.str();
 					sf::Vector2f mousePos = mouse.getPositionW();
 					float orbitRadius = sqrt(pow((int)mousePos.x, 2) + pow((int)mousePos.y, 2));
-					Planet newShape(planetName, 5, (sf::Vector2i)mousePos , sf::Color::Green, 5, 5, acos(mousePos.x / orbitRadius) * 180 / 3.14);
-					customPlanetCounter++;
+					Planet newShape("Custom planet "+std::to_string(planetCounter), 5, (sf::Vector2i)mousePos , sf::Color::Green, 5, 5, acos(mousePos.x / orbitRadius) * 180 / 3.14);
+					planetCounter++;
 				}
 				else {
 					for (int itr2 = 0; itr2 < planetArray.size(); itr2++) {
@@ -116,9 +104,12 @@ int main() {
 				}
 				//Exit program
 				else if (event.key.code == sf::Keyboard::Escape) {
+					
 					window.close();
+					break;
 				}
-				else if (event.key.code == sf::Keyboard::C) {
+				else if (event.key.code == sf::Keyboard::I) {
+					//Used for user input into the command line, Not really sure where I will use it.
 					//std::cin >>inputString;
 					//textArray[itr].updateText(inputString, textArray[itr].returnTextPosition(), sf::Color(255, 255, 255, 255));
 				}
@@ -127,17 +118,18 @@ int main() {
 			}
 		}
 		window.clear();
-		//Loop through all of the planets and update and draw them
-		for (int itr = 0; itr<planetArray.size(); itr++) {
-			planetArray[itr].update();
-			window.draw(planetArray[itr].getRenderObjet());
+		for (auto& planetItr : planetArray) {
+			planetItr.update();
+			window.draw(planetItr.getRenderObjet());
 		}
-		
-		for (int itr = 0; itr<textArray.size(); itr++) {
-			window.draw(textArray[itr].returnRenderObject());
-			
+		for (auto& textItr : textArray) {
+			window.draw(textItr.returnRenderObject());
 		}
+
 		window.display();
 	}
 	return 0;
 }
+
+
+
