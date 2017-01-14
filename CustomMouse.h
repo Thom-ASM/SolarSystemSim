@@ -8,6 +8,7 @@ public:
 	sf::Vector2i getPositionP();
 	//Get the poition of the mouse in world view
 	sf::Vector2f getPositionW();
+	~MouseC();
 private:
 	sf::RenderWindow &windowReference;
 	

@@ -12,9 +12,10 @@ private:
 	sf::Font font;
 	sf::Color color;
 	std::string string;
+	int textSize;
 public:
-	interfaceText(sf::Vector2f textPosition, sf::Color textColor,std::string String);
-	void updateText(std::string string, sf::Vector2f textPosition,  sf::Color textColor);
+	interfaceText(sf::Vector2f textPosition, sf::Color textColor,std::string String, int textSize);
+	void updateText(std::string string, sf::Vector2f textPosition,  sf::Color textColor, int textSize);
 	sf::Vector2f returnTextPosition();
 	std::string returnString();
 	sf::Text returnRenderObject();

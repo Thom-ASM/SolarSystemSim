@@ -9,5 +9,7 @@ sf::Vector2i MouseC::getPositionP() {
 sf::Vector2f MouseC::getPositionW() {
 	return windowReference.mapPixelToCoords(getPosition(windowReference));
 }
+MouseC::~MouseC() {
 
+}
 

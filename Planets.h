@@ -13,15 +13,17 @@ class Planet {
 private:
 	//Variables
 	int planetRadius, orbitRadius;
-	float currentAngle, planetMass, angularVelocity, orbitalPeriod, netForce,velocity;
+	float currentAngle, planetMass, angularVelocity, orbitalPeriod, fx,fy,vx, vy,velocity;
+	float acc;
 	sf::Color planetColor;
 	sf::Vector2i planetPos;
 	sf::CircleShape planet;
 	//Functions
 	//float getNetForce();
 	std::string planetName;
-	bool isCollision(int itr);
+	bool isCollision(Planet* collidingPlanet);
 	void checkCollision();
+	float dt = 1 / 60;
 	
 	
 public:
@@ -35,7 +37,7 @@ public:
 	
 	float returnAngVel();
 	float returnAngle();
-	float getNetForce();
+	void getNetForce();
 	float returnMass();
 	int returnRadius();
 	sf::Color returnColor();
