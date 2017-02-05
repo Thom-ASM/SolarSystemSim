@@ -119,7 +119,7 @@ int main() {
 			textArray[2].updateText("Planet mass: " + std::to_string(activePlanet->returnMass()), textArray[2].returnTextPosition(), planetColor, 30);
 			textArray[3].updateText("Planet angle: " + std::to_string(activePlanet->returnAngle()), textArray[3].returnTextPosition(), planetColor, 30);
 			textArray[4].updateText("Planet radius: " + std::to_string(activePlanet->returnRadius()), textArray[4].returnTextPosition(), planetColor,30);
-			textArray[6].updateText(ReturnTextItem(activePlanet->returnName(), "planetTextFileA.txt") + std::to_string(activePlanet->returnRadius()), textArray[6].returnTextPosition(), planetColor,20);
+			textArray[6].updateText(ReturnTextItem(activePlanet->returnName(), "planetTextFileA.txt"), textArray[6].returnTextPosition(), planetColor,20);
 			window.draw(textItr.returnRenderObject());
 		}
 
